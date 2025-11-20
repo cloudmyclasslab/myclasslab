@@ -28,6 +28,8 @@
             padding: 5px;
             border-radius: 25px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            flex-wrap: wrap;
+            justify-content: center;
         }
         .tab-btn {
             padding: 8px 16px;
@@ -35,7 +37,7 @@
             border-radius: 20px;
             cursor: pointer;
             font-weight: bold;
-            font-size: 16px;
+            font-size: 15px;
             background-color: transparent;
             color: #546e7a;
             transition: 0.3s;
@@ -44,6 +46,10 @@
             background-color: #039be5;
             color: white;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        /* 마지막 탭(정리) 강조 */
+        .tab-btn.summary-btn.active {
+            background-color: #ff7043; /* 주황색 강조 */
         }
 
         /* --- 메시지 박스 --- */
@@ -129,7 +135,7 @@
             transform: translateX(-50%);
         }
 
-        /* 활동 1: 수직 낙하 */
+        /* 활동 1 애니메이션 */
         @keyframes dropHeavy {
             0% { top: 20px; }
             100% { top: calc(100% - 80px); }
@@ -142,7 +148,7 @@
             100% { top: calc(100% - 80px); transform: translateX(-50%) rotate(0deg); }
         }
 
-        /* 활동 2: 포물선 */
+        /* 활동 2 애니메이션 */
         @keyframes parabolicThrow {
             0% { top: 20px; left: 5%; transform: translateX(-50%) rotate(0deg); }
             20% { top: 0px; left: 20%; }
@@ -151,7 +157,7 @@
             100% { top: calc(100% - 80px); left: 95%; transform: translateX(-50%) rotate(180deg); }
         }
         
-        /* 활동 3: 지구본 (CSS로 직접 그림) */
+        /* 활동 3 지구본 */
         #earth-container {
             width: 100%;
             height: 100%;
@@ -162,33 +168,29 @@
         }
         
         #earth {
-            /* 지구 크기 280px - 전체가 지구 표면이 됨 */
             width: 280px;
             height: 280px;
-            background-color: #42a5f5; /* 바다색 */
+            background-color: #42a5f5;
             border-radius: 50%;
             border: 4px solid #1565c0;
             position: relative;
             z-index: 5;
-            overflow: hidden; /* 땅이 밖으로 나가지 않게 */
-            box-shadow: inset -20px -20px 50px rgba(0,0,0,0.2); /* 입체감 */
+            overflow: hidden;
+            box-shadow: inset -20px -20px 50px rgba(0,0,0,0.2);
         }
 
-        /* 대륙 (땅) 모양 만들기 */
+        /* 대륙 */
         .land {
             position: absolute;
-            background-color: #66bb6a; /* 땅 초록색 */
+            background-color: #66bb6a;
             border-radius: 50%;
             opacity: 0.9;
         }
-        /* 큰 대륙 */
         .land-1 { width: 160px; height: 140px; top: 30px; left: 40px; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-        /* 작은 대륙 */
         .land-2 { width: 100px; height: 100px; top: 150px; left: 150px; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-        /* 섬 */
         .land-3 { width: 40px; height: 30px; top: 180px; left: 50px; border-radius: 50%; }
         
-        /* 지구 위 물체들 (스티커) */
+        /* 스티커 */
         .sticker {
             position: absolute;
             font-size: 40px;
@@ -199,8 +201,62 @@
             width: 50px;
             height: 50px;
             pointer-events: none; 
-            z-index: 10; /* 지구보다 위에 */
+            z-index: 10;
         }
+
+        /* --- 활동 4: 핵심 정리 스타일 --- */
+        #summary-container {
+            width: 100%;
+            height: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #fff3e0; /* 연한 주황색 배경 */
+            overflow-y: auto;
+        }
+        
+        .summary-card {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: flex-start;
+            border-left: 8px solid #ff7043;
+        }
+
+        .summary-num {
+            background: #ff7043;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .summary-content h3 {
+            margin: 0 0 5px 0;
+            color: #d84315;
+            font-size: 18px;
+        }
+
+        .summary-content p {
+            margin: 0;
+            font-size: 16px;
+            color: #424242;
+            line-height: 1.4;
+        }
+
     </style>
 </head>
 <body>
@@ -212,6 +268,7 @@
         <button class="tab-btn active" onclick="changeTab(1)">활동 1: 물체 낙하 실험</button>
         <button class="tab-btn" onclick="changeTab(2)">활동 2: 종이비행기 날리기</button>
         <button class="tab-btn" onclick="changeTab(3)">활동 3: 지구본에 사진 붙이기</button>
+        <button class="tab-btn summary-btn" onclick="changeTab(4)">✨ 핵심 정리</button>
     </div>
 
     <!-- 메시지 박스 -->
@@ -226,12 +283,39 @@
         <!-- 활동 3용 지구본 -->
         <div id="earth-container" style="display:none;">
             <div id="earth">
-                <!-- CSS로 만든 대륙 -->
                 <div class="land land-1"></div>
                 <div class="land land-2"></div>
                 <div class="land land-3"></div>
             </div>
-            <!-- 스티커들이 여기에 동적으로 추가됩니다 -->
+        </div>
+
+        <!-- 활동 4용 핵심 정리 -->
+        <div id="summary-container" style="display:none;">
+            
+            <div class="summary-card">
+                <div class="summary-num">1</div>
+                <div class="summary-content">
+                    <h3>중력 (Gravity)</h3>
+                    <p>지구가 모든 물체를 <strong>자기 중심 방향</strong>으로 끌어당기는 힘이에요.</p>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-num">2</div>
+                <div class="summary-content">
+                    <h3>중력의 방향</h3>
+                    <p>중력은 항상 <strong>지구 중심 방향</strong>(아래쪽)으로 작용해요.</p>
+                </div>
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-num">3</div>
+                <div class="summary-content">
+                    <h3>중력의 영향</h3>
+                    <p>물체가 떨어지거나 우리가 땅에 서 있는 것은 모두 <strong>중력 때문</strong>이에요.</p>
+                </div>
+            </div>
+
         </div>
 
         <div id="ground"></div>
@@ -257,6 +341,11 @@
         <button class="action-btn btn-reset" onclick="resetLab()">🔄 지구 청소</button>
     </div>
 
+    <!-- 활동 4 컨트롤 (없음) -->
+    <div id="ctrl-4" class="controls" style="display:none;">
+        <!-- 설명 화면이므로 컨트롤 버튼 없음 -->
+    </div>
+
     <script>
         let currentTab = 1;
         const msgBox = document.getElementById('message-box');
@@ -267,31 +356,50 @@
         
         const earthContainer = document.getElementById('earth-container');
         const earthDiv = document.getElementById('earth');
+        
+        const summaryContainer = document.getElementById('summary-container');
 
         function changeTab(tabNum) {
             currentTab = tabNum;
             resetLab(); 
 
+            // 탭 스타일 업데이트
             document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
                 if (idx + 1 === tabNum) btn.classList.add('active');
                 else btn.classList.remove('active');
             });
 
+            // 컨트롤 패널 전환
             document.getElementById('ctrl-1').style.display = tabNum === 1 ? 'flex' : 'none';
             document.getElementById('ctrl-2').style.display = tabNum === 2 ? 'flex' : 'none';
             document.getElementById('ctrl-3').style.display = tabNum === 3 ? 'flex' : 'none';
+            document.getElementById('ctrl-4').style.display = tabNum === 4 ? 'flex' : 'none';
 
-            if (tabNum === 3) {
-                earthContainer.style.display = 'flex';
-                movingObj.style.display = 'none';
+            // 화면 구성 전환
+            earthContainer.style.display = 'none';
+            movingObj.style.display = 'none';
+            summaryContainer.style.display = 'none';
+            
+            if (tabNum === 4) {
+                // 활동 4: 핵심 정리
+                summaryContainer.style.display = 'flex';
                 ground.style.display = 'none';
-                labContainer.style.backgroundColor = '#263238'; // 우주 배경
+                labContainer.style.backgroundColor = '#fff3e0';
+                labContainer.style.border = '4px solid #ff7043';
+                msgBox.textContent = "실험에서 배운 내용을 정리해 볼까요?";
+            } else if (tabNum === 3) {
+                // 활동 3: 지구본
+                earthContainer.style.display = 'flex';
+                ground.style.display = 'none';
+                labContainer.style.backgroundColor = '#263238';
+                labContainer.style.border = '4px solid #039be5';
                 msgBox.textContent = "지구 표면에 찰싹! 모두 중심을 향해 서 있어요.";
             } else {
-                earthContainer.style.display = 'none';
+                // 활동 1, 2: 지상
                 movingObj.style.display = 'block';
                 ground.style.display = 'block';
                 labContainer.style.backgroundColor = 'white';
+                labContainer.style.border = '4px solid #039be5';
                 
                 if (tabNum === 1) msgBox.textContent = "무거운 공과 가벼운 풍선, 어떻게 떨어질까요?";
                 else msgBox.textContent = "종이를 앞으로 던지면 어떻게 움직일까요?";
@@ -301,7 +409,6 @@
         // 활동 1: 공 vs 풍선
         function runActivity1(type) {
             resetAnimations();
-            
             if (type === 'ball') {
                 movingObj.textContent = '⚽';
                 msgBox.textContent = "공은 아래로 떨어져요.";
@@ -321,58 +428,7 @@
             movingObj.style.animation = "parabolicThrow 2.5s ease-out forwards";
         }
 
-        // 활동 3: 지구본 붙이기 (개선됨)
-        function addSticker(type) {
-            const sticker = document.createElement('div');
-            sticker.className = 'sticker';
-            sticker.textContent = type === 'person' ? '🧍' : '🏢';
-
-            // 랜덤 각도
-            const angleDeg = Math.random() * 360;
-            const angleRad = angleDeg * (Math.PI / 180);
-            
-            // [수정 완료] 파란 공간 제거 및 표면 부착 계산
-            // 지구 지름 280px -> 반지름 140px
-            const earthRadius = 140; 
-            
-            // 스티커 박스 높이 50px. 이모지는 flex-end로 바닥에 위치.
-            // 스티커의 '발'이 지구 반지름(140) 위치에 와야 함.
-            // 스티커의 중심점은 발(바닥)에서 높이의 절반(25px)만큼 안쪽에 있음.
-            // 즉, 스티커 중심점까지의 거리는 140 + 25 = 165px 가 되어야 함.
-            // 이모지 자체의 미세한 여백을 고려해 3~5px 정도 더 안쪽으로 당김.
-            
-            const stickerBoxHalfHeight = 25; 
-            const fineTune = 5; // 더 꽉 붙게 만드는 값
-            const distance = earthRadius + stickerBoxHalfHeight - fineTune; 
-
-            // 지구본 Div의 중심점 (140, 140) - 지구가 280px이므로
-            const cx = 140;
-            const cy = 140;
-
-            // 중심점 기준 스티커 위치 계산
-            const x = cx + distance * Math.cos(angleRad);
-            const y = cy + distance * Math.sin(angleRad);
-
-            // 스티커 div의 중심을 (x,y)로 이동 (스티커가 50x50이므로 -25)
-            sticker.style.left = `${x - 25}px`; 
-            sticker.style.top = `${y - 25}px`;
-
-            // 회전 각도 설정 (사람이 서 있는 모습)
-            const rotateAngle = angleDeg + 90;
-            sticker.style.transform = `rotate(${rotateAngle}deg)`;
-            
-            // 지구본 컨테이너에 추가 (지구 div 형제로 추가해야 겹치지 않음)
-            earthDiv.appendChild(sticker); 
-            // 주의: earthDiv에 넣으면 overflow:hidden 때문에 잘릴 수 있음?
-            // 아니오, sticker는 absolute이고 earthDiv는 relative. 
-            // 하지만 earthDiv에 overflow:hidden을 줬으므로(대륙 잘림 방지),
-            // 스티커가 지구 밖으로 튀어나오면 잘릴 수 있습니다.
-            // 해결: 스티커는 earthDiv가 아니라 earthContainer에 붙이되 위치 계산을 잘해야 함.
-            // 또는 earthDiv의 overflow를 풀고 대륙(land)을 둥글게 깎아야 함.
-            // 여기서는 더 쉬운 방법: earthContainer에 붙입니다.
-        }
-
-        // 스티커 부착 함수 재정의 (컨테이너에 부착)
+        // 활동 3: 지구본 붙이기
         function addSticker(type) {
             const sticker = document.createElement('div');
             sticker.className = 'sticker';
@@ -381,37 +437,11 @@
             const angleDeg = Math.random() * 360;
             const angleRad = angleDeg * (Math.PI / 180);
             
-            // 계산 로직 동일
             const earthRadius = 140; 
             const stickerBoxHalfHeight = 25; 
-            const fineTune = 4; // 발이 표면에 살짝 파묻히게
+            const fineTune = 4; 
             const distance = earthRadius + stickerBoxHalfHeight - fineTune; 
 
-            // earthContainer는 flex center 정렬임.
-            // 내부에 relative 좌표계가 필요함. earthDiv가 기준이 되면 좋음.
-            // earthDiv의 overflow 문제 해결을 위해
-            // earthDiv는 "배경" 역할만 하고, 스티커는 그 위(earthContainer)에 얹습니다.
-            
-            // earthContainer는 크기가 100%임. 중심점을 찾아야 함.
-            // 하지만 absolute positioning을 위해 earthDiv와 같은 위치에 투명 래퍼를 하나 두는 게 좋지만,
-            // 간단히 earthDiv 자체의 overflow를 풀고, 대륙(land) div들에만 border-radius 50%를 잘 줘서 
-            // 삐져나가지 않게 하는 방법도 있음. 하지만 대륙이 사각형이라 clip이 필요함.
-            
-            // [최종 해결] earthDiv의 overflow: hidden은 끄고(visible), 
-            // 대신 border-radius: 50%와 background가 있으니 대륙이 튀어나와도
-            // 지구 원 밖으로 나간 대륙 부분은 `clip-path: circle(50%)`로 자릅니다!
-            earthDiv.style.overflow = 'visible'; // 스티커 보이게
-            earthDiv.style.clipPath = 'none'; // 일단 해제
-            
-            // 대륙이 튀어나오는 문제 해결: 대륙을 담는 별도 div를 만들거나
-            // 그냥 스티커를 earthDiv에 넣습니다. (overflow: visible 상태로)
-            // 단, 대륙이 튀어나오면 안 예쁘므로, 대륙 전용 래퍼를 만듭니다.
-            // HTML 구조를 바꿉니다. (동적 생성시 반영)
-            
-            // HTML 구조 수정 없이 JS에서 처리:
-            // 스티커를 earthDiv에 넣되, earthDiv의 overflow는 visible로.
-            // 대륙이 튀어나가는 건... 그냥 대륙 위치를 잘 잡아서 안 튀어나가게 했습니다 (CSS 좌표 수정됨).
-            
             const cx = 140;
             const cy = 140;
             const x = cx + distance * Math.cos(angleRad);
@@ -420,6 +450,10 @@
             sticker.style.left = `${x - 25}px`; 
             sticker.style.top = `${y - 25}px`;
             sticker.style.transform = `rotate(${angleDeg + 90}deg)`;
+            
+            // 대륙 튀어나옴 방지 위해 overflow visible 유지
+            earthDiv.style.overflow = 'visible'; 
+            earthDiv.style.clipPath = 'none';
             
             earthDiv.appendChild(sticker);
             
@@ -436,9 +470,7 @@
             const stickers = document.querySelectorAll('.sticker');
             stickers.forEach(el => el.remove());
             
-            if(currentTab === 1) msgBox.textContent = "무거운 공과 가벼운 풍선, 어떻게 떨어질까요?";
-            else if(currentTab === 2) msgBox.textContent = "종이를 앞으로 던지면 어떻게 움직일까요?";
-            else if(currentTab === 3) msgBox.textContent = "지구 표면에 찰싹! 모두 중심을 향해 서 있어요.";
+            // 기본 메시지로 초기화되지 않도록 탭 전환 로직에 맡김
         }
 
         function resetAnimations() {
