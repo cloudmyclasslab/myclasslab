@@ -3,482 +3,513 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>지구가 끌어당기는 힘, 중력</title>
+    <title>용수철저울 실험실: 중력과 무게</title>
     <style>
-        /* --- 기본 스타일 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;700&display=swap');
+
         body {
-            font-family: 'Jua', 'Malgun Gothic', sans-serif;
-            background-color: #e1f5fe;
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #f0f8ff;
             display: flex;
             flex-direction: column;
             align-items: center;
+            padding: 20px;
             margin: 0;
-            height: 100vh;
-            overflow: hidden;
+            transition: background-color 0.5s;
         }
 
-        h1 { color: #01579b; margin: 15px 0; font-size: 26px; }
+        h1, h2, h3 {
+            font-family: 'Jua', sans-serif;
+            margin: 10px 0;
+            color: #2c3e50;
+        }
 
-        /* --- 탭 메뉴 --- */
-        .tabs {
+        /* 개념 설명 박스 (업그레이드) */
+        .concept-box {
+            background-color: #e8f5e9;
+            border: 2px solid #4CAF50;
+            padding: 15px;
+            border-radius: 10px;
+            max-width: 700px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            line-height: 1.6;
+        }
+        .concept-title {
+            color: #2e7d32;
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+            display: block;
+        }
+        .highlight {
+            background-color: #fff9c4;
+            padding: 2px 5px;
+            border-radius: 4px;
+            font-weight: bold;
+        }
+
+        /* 실험 공간 레이아웃 */
+        .lab-container {
             display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-            background: white;
-            padding: 5px;
-            border-radius: 25px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            gap: 40px;
+            align-items: flex-start;
             flex-wrap: wrap;
             justify-content: center;
-        }
-        .tab-btn {
-            padding: 8px 16px;
-            border: none;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 15px;
-            background-color: transparent;
-            color: #546e7a;
-            transition: 0.3s;
-        }
-        .tab-btn.active {
-            background-color: #039be5;
-            color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-        }
-        /* 마지막 탭(정리) 강조 */
-        .tab-btn.summary-btn.active {
-            background-color: #ff7043; /* 주황색 강조 */
-        }
-
-        /* --- 메시지 박스 --- */
-        #message-box {
-            width: 90%;
-            max-width: 500px;
-            min-height: 50px;
-            background: #fff;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            padding: 10px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            font-size: 18px;
-            word-break: keep-all;
-        }
-
-        /* --- 실험 화면 (공통) --- */
-        #lab-container {
-            width: 90%;
-            max-width: 500px;
-            height: 55vh;
-            background-color: white;
-            border: 4px solid #039be5;
-            border-radius: 15px;
-            position: relative;
-            margin-bottom: 15px;
-            overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.05);
-        }
-
-        #ground {
-            position: absolute;
-            bottom: 0;
             width: 100%;
-            height: 30px;
-            background-color: #8d6e63;
-            z-index: 10;
+            max-width: 900px;
         }
 
-        /* --- 컨트롤 버튼 영역 --- */
-        .controls {
+        /* 왼쪽: 저울 구역 */
+        .scale-section {
             display: flex;
-            gap: 10px;
-            justify-content: center;
-            flex-wrap: wrap;
+            flex-direction: column;
+            align-items: center;
+            width: 250px;
         }
-        button.action-btn {
-            padding: 12px 20px;
-            font-size: 16px;
-            border: none;
+
+        /* 용수철 저울 스타일 */
+        .scale-system {
+            position: relative;
+            width: 120px;
+            height: 450px;
+            background: #e0e0e0;
             border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            color: white;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.1);
-            transition: transform 0.1s;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.2), 5px 5px 15px rgba(0,0,0,0.2);
+            margin-bottom: 15px;
         }
-        button.action-btn:active { transform: scale(0.95) translateY(4px); box-shadow: none; }
 
-        .btn-ball { background-color: #7cb342; }
-        .btn-balloon { background-color: #f48fb1; }
-        .btn-paper { background-color: #42a5f5; }
-        .btn-earth { background-color: #5c6bc0; }
-        .btn-reset { background-color: #78909c; }
-
-        /* --- 활동별 요소 스타일 --- */
-        
-        /* 공통 물체 클래스 */
-        .object {
+        .hook-base {
+            width: 80px;
+            height: 15px;
+            background: #555;
             position: absolute;
+            top: 0;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .spring-case {
+            width: 50px;
+            height: 300px;
+            background: linear-gradient(to right, #ffd700, #fce66d, #ffd700);
+            border: 1px solid #d4af37;
+            border-radius: 5px;
+            position: absolute;
+            top: 15px;
+            display: flex;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .inner-spring {
+            width: 14px;
+            background: repeating-linear-gradient(45deg, #7f8c8d, #7f8c8d 2px, #bdc3c7 2px, #bdc3c7 4px);
+            height: 30px;
+            transition: height 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            margin-top: 25px;
+            border-radius: 0 0 5px 5px;
+        }
+
+        .ruler {
+            position: absolute;
+            right: 0;
+            top: 25px;
+            height: 250px;
+            width: 15px;
+            border-left: 1px solid #333;
+        }
+        .tick {
+            width: 8px;
+            height: 1px;
+            background: #333;
+            position: absolute;
+            right: 0;
+        }
+
+        .pointer {
+            width: 0; 
+            height: 0; 
+            border-top: 6px solid transparent;
+            border-bottom: 6px solid transparent;
+            border-left: 12px solid #e74c3c;
+            position: absolute;
+            left: 5px;
+            top: 55px;
+            transition: top 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            z-index: 10;
+            filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        }
+
+        .hanging-hook {
+            width: 14px;
+            height: 25px;
+            border: 4px solid #7f8c8d;
+            border-top: none;
+            border-radius: 0 0 15px 15px;
+            position: absolute;
+            top: 315px;
+            transition: transform 0.6s;
+        }
+
+        .active-item {
+            position: absolute;
+            top: 350px;
             font-size: 50px;
-            line-height: 1;
-            transform-origin: center;
-            z-index: 20;
-            top: 20px;
+            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.3));
+            transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            cursor: pointer;
+        }
+        .active-item:hover::after {
+            content: "클릭해서 제거";
+            position: absolute;
+            top: -20px;
             left: 50%;
             transform: translateX(-50%);
+            font-size: 12px;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
         }
 
-        /* 활동 1 애니메이션 */
-        @keyframes dropHeavy {
-            0% { top: 20px; }
-            100% { top: calc(100% - 80px); }
-        }
-        @keyframes dropLight {
-            0% { top: 20px; transform: translateX(-50%) rotate(0deg); }
-            25% { transform: translateX(-60%) rotate(5deg); }
-            50% { transform: translateX(-40%) rotate(-5deg); }
-            75% { transform: translateX(-55%) rotate(3deg); }
-            100% { top: calc(100% - 80px); transform: translateX(-50%) rotate(0deg); }
-        }
-
-        /* 활동 2 애니메이션 */
-        @keyframes parabolicThrow {
-            0% { top: 20px; left: 5%; transform: translateX(-50%) rotate(0deg); }
-            20% { top: 0px; left: 20%; }
-            40% { top: 50px; left: 45%; transform: rotate(45deg); }
-            60% { top: 150px; left: 70%; transform: rotate(90deg); }
-            100% { top: calc(100% - 80px); left: 95%; transform: translateX(-50%) rotate(180deg); }
-        }
-        
-        /* 활동 3 지구본 */
-        #earth-container {
+        /* 결과 표시 패널 */
+        .data-panel {
+            background: white;
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid #b0bec5;
             width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
+            text-align: center;
         }
-        
-        #earth {
-            width: 280px;
-            height: 280px;
-            background-color: #42a5f5;
-            border-radius: 50%;
-            border: 4px solid #1565c0;
-            position: relative;
-            z-index: 5;
-            overflow: hidden;
-            box-shadow: inset -20px -20px 50px rgba(0,0,0,0.2);
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+        .data-value {
+            font-weight: bold;
+            color: #1976D2;
         }
 
-        /* 대륙 */
-        .land {
-            position: absolute;
-            background-color: #66bb6a;
-            border-radius: 50%;
-            opacity: 0.9;
-        }
-        .land-1 { width: 160px; height: 140px; top: 30px; left: 40px; border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
-        .land-2 { width: 100px; height: 100px; top: 150px; left: 150px; border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
-        .land-3 { width: 40px; height: 30px; top: 180px; left: 50px; border-radius: 50%; }
-        
-        /* 스티커 */
-        .sticker {
-            position: absolute;
-            font-size: 40px;
-            transition: all 0.3s;
-            display: flex;
-            justify-content: center;
-            align-items: flex-end; 
-            width: 50px;
-            height: 50px;
-            pointer-events: none; 
-            z-index: 10;
-        }
-
-        /* --- 활동 4: 핵심 정리 스타일 --- */
-        #summary-container {
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            box-sizing: border-box;
+        /* 오른쪽: 제어 패널 */
+        .control-section {
+            flex: 1;
+            min-width: 300px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            background: #fff3e0; /* 연한 주황색 배경 */
-            overflow-y: auto;
+            gap: 20px;
         }
-        
-        .summary-card {
+
+        /* 장소 선택기 */
+        .location-selector {
             background: white;
-            border-radius: 15px;
             padding: 15px;
-            margin-bottom: 15px;
-            width: 100%;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
-            display: flex;
-            align-items: flex-start;
-            border-left: 8px solid #ff7043;
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-
-        .summary-num {
-            background: #ff7043;
-            color: white;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+        .location-btn-group {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .loc-btn {
+            flex: 1;
+            padding: 10px;
+            border: 2px solid #ddd;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Jua', sans-serif;
+            font-size: 1em;
+        }
+        .loc-btn.active {
+            background: #e3f2fd;
+            border-color: #2196F3;
+            color: #1565C0;
             font-weight: bold;
-            margin-right: 15px;
-            flex-shrink: 0;
+            transform: scale(1.05);
+        }
+        .loc-btn:hover:not(.active) {
+            background: #f5f5f5;
         }
 
-        .summary-content h3 {
-            margin: 0 0 5px 0;
-            color: #d84315;
-            font-size: 18px;
+        /* 물건 선반 */
+        .shelf {
+            background-color: #8d6e63;
+            padding: 20px;
+            border-radius: 10px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        .shelf::before {
+            content: "";
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            right: 20px;
+            height: 10px;
+            background: #6d4c41;
+            border-radius: 5px 5px 0 0;
         }
 
-        .summary-content p {
-            margin: 0;
-            font-size: 16px;
-            color: #424242;
-            line-height: 1.4;
+        .item-card {
+            background: white;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: 2px solid transparent;
+            position: relative;
+        }
+        .item-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-color: #4CAF50;
+        }
+        .item-mass-tag {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            font-size: 0.7em;
+            background: #eee;
+            padding: 2px 4px;
+            border-radius: 3px;
+            color: #666;
+        }
+
+        .item-icon { font-size: 35px; display: block; margin: 5px 0; }
+        .item-name { font-size: 13px; color: #555; font-weight: bold; display: block;}
+
+        .toast-msg {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 100;
         }
 
     </style>
 </head>
 <body>
 
-    <h1>🎓 지구가 끌어당기는 힘, 중력</h1>
+    <h1>⚖️ 심화 용수철저울 실험실</h1>
 
-    <!-- 탭 메뉴 -->
-    <div class="tabs">
-        <button class="tab-btn active" onclick="changeTab(1)">활동 1: 물체 낙하 실험</button>
-        <button class="tab-btn" onclick="changeTab(2)">활동 2: 종이비행기 날리기</button>
-        <button class="tab-btn" onclick="changeTab(3)">활동 3: 지구본에 사진 붙이기</button>
-        <button class="tab-btn summary-btn" onclick="changeTab(4)">✨ 핵심 정리</button>
+    <div class="concept-box">
+        <span class="concept-title">📘 교과서 핵심 개념</span>
+        1. <strong>무게</strong>는 질량에 <span class="highlight">지구가 당기는 힘(중력)</span>이 합쳐진 것입니다.<br>
+        2. 높은 산 위로 올라가면 지구 중심에서 멀어져 중력이 약해지므로, <span class="highlight">무게가 조금 줄어듭니다.</span><br>
+        3. 장소가 바뀌어도 물체의 고유한 양인 <strong>질량</strong>은 변하지 않습니다.
     </div>
 
-    <!-- 메시지 박스 -->
-    <div id="message-box">어떤 실험을 해볼까요?</div>
+    <div class="lab-container">
+        <!-- 왼쪽: 측정 시스템 -->
+        <div class="scale-section">
+            <div class="scale-system">
+                <div class="hook-base"></div>
+                <div class="spring-case">
+                    <div class="ruler" id="ruler"></div>
+                    <div class="pointer" id="pointer"></div>
+                    <div class="inner-spring" id="spring"></div>
+                </div>
+                <div class="hanging-hook"></div>
+                <div class="active-item" id="active-item" onclick="removeItem()"></div>
+            </div>
 
-    <!-- 실험 공간 -->
-    <div id="lab-container">
-        
-        <!-- 활동 1, 2용 물체 -->
-        <div id="moving-object" class="object" style="display:none;">❓</div>
-
-        <!-- 활동 3용 지구본 -->
-        <div id="earth-container" style="display:none;">
-            <div id="earth">
-                <div class="land land-1"></div>
-                <div class="land land-2"></div>
-                <div class="land land-3"></div>
+            <div class="data-panel">
+                <div class="data-row">
+                    <span>현재 장소:</span>
+                    <span id="loc-display" class="data-value">🏫 과학실 (지상)</span>
+                </div>
+                <div class="data-row">
+                    <span>물체 질량:</span>
+                    <span id="mass-display" class="data-value">-</span>
+                </div>
+                <div style="border-top:1px solid #ddd; margin: 5px 0;"></div>
+                <div class="data-row" style="font-size:1.1em;">
+                    <span>측정 무게:</span>
+                    <span id="weight-display" class="data-value" style="color:#e74c3c; font-size:1.2em;">0 N</span>
+                </div>
             </div>
         </div>
 
-        <!-- 활동 4용 핵심 정리 -->
-        <div id="summary-container" style="display:none;">
+        <!-- 오른쪽: 제어 패널 -->
+        <div class="control-section">
             
-            <div class="summary-card">
-                <div class="summary-num">1</div>
-                <div class="summary-content">
-                    <h3>중력 (Gravity)</h3>
-                    <p>지구가 모든 물체를 <strong>자기 중심 방향</strong>으로 끌어당기는 힘이에요.</p>
+            <!-- 1. 장소 선택 -->
+            <div class="location-selector">
+                <h3>🌍 장소 이동 (중력 변화 실험)</h3>
+                <p style="font-size:0.9em; color:#666; margin-bottom:10px;">장소에 따라 무게가 어떻게 변하는지 확인해보세요.</p>
+                <div class="location-btn-group">
+                    <button class="loc-btn active" onclick="changeLocation(1.0, '🏫 과학실 (지상)', '#f0f8ff', this)">
+                        🏫 지상<br><small>(중력 1배)</small>
+                    </button>
+                    <button class="loc-btn" onclick="changeLocation(0.95, '🏔️ 높은 산 정상', '#e3f2fd', this)">
+                        🏔️ 높은 산<br><small>(중력 약함)</small>
+                    </button>
+                    <button class="loc-btn" onclick="changeLocation(0.16, '🌕 달 (Moon)', '#2c3e50', this)" style="border-color:#5c6bc0;">
+                        🌕 달<br><small>(중력 1/6배)</small>
+                    </button>
                 </div>
             </div>
 
-            <div class="summary-card">
-                <div class="summary-num">2</div>
-                <div class="summary-content">
-                    <h3>중력의 방향</h3>
-                    <p>중력은 항상 <strong>지구 중심 방향</strong>(아래쪽)으로 작용해요.</p>
+            <!-- 2. 물건 선반 -->
+            <div>
+                <h3>📦 실험 물체 (질량 불변)</h3>
+                <div class="shelf">
+                    <div class="item-card" onclick="selectItem(0.15, '✏️', '필통')">
+                        <span class="item-mass-tag">150g</span>
+                        <span class="item-icon">✏️</span>
+                        <span class="item-name">필통</span>
+                    </div>
+                    <div class="item-card" onclick="selectItem(0.3, '📱', '휴대폰')">
+                        <span class="item-mass-tag">300g</span>
+                        <span class="item-icon">📱</span>
+                        <span class="item-name">휴대폰</span>
+                    </div>
+                    <div class="item-card" onclick="selectItem(0.65, '📚', '과학책')">
+                        <span class="item-mass-tag">650g</span>
+                        <span class="item-icon">📚</span>
+                        <span class="item-name">과학책</span>
+                    </div>
+                    <div class="item-card" onclick="selectItem(0.25, '🍎', '사과')">
+                        <span class="item-mass-tag">250g</span>
+                        <span class="item-icon">🍎</span>
+                        <span class="item-name">사과</span>
+                    </div>
+                    <div class="item-card" onclick="selectItem(0.5, '🥤', '물병')">
+                        <span class="item-mass-tag">500g</span>
+                        <span class="item-icon">🥤</span>
+                        <span class="item-name">물병</span>
+                    </div>
+                     <div class="item-card" onclick="selectItem(0.8, '🪨', '돌멩이')">
+                        <span class="item-mass-tag">800g</span>
+                        <span class="item-icon">🪨</span>
+                        <span class="item-name">돌멩이</span>
+                    </div>
                 </div>
             </div>
-
-            <div class="summary-card">
-                <div class="summary-num">3</div>
-                <div class="summary-content">
-                    <h3>중력의 영향</h3>
-                    <p>물체가 떨어지거나 우리가 땅에 서 있는 것은 모두 <strong>중력 때문</strong>이에요.</p>
-                </div>
-            </div>
-
+            
         </div>
-
-        <div id="ground"></div>
     </div>
 
-    <!-- 활동 1 컨트롤 -->
-    <div id="ctrl-1" class="controls">
-        <button class="action-btn btn-ball" onclick="runActivity1('ball')">⚽ 공</button>
-        <button class="action-btn btn-balloon" onclick="runActivity1('balloon')">🎈 풍선</button>
-        <button class="action-btn btn-reset" onclick="resetLab()">🔄 다시 하기</button>
-    </div>
-
-    <!-- 활동 2 컨트롤 -->
-    <div id="ctrl-2" class="controls" style="display:none;">
-        <button class="action-btn btn-paper" onclick="runActivity2()">📄 종이 날리기</button>
-        <button class="action-btn btn-reset" onclick="resetLab()">🔄 다시 하기</button>
-    </div>
-
-    <!-- 활동 3 컨트롤 -->
-    <div id="ctrl-3" class="controls" style="display:none;">
-        <button class="action-btn btn-earth" onclick="addSticker('person')">🧍 사람 붙이기</button>
-        <button class="action-btn btn-earth" onclick="addSticker('building')">🏢 건물 세우기</button>
-        <button class="action-btn btn-reset" onclick="resetLab()">🔄 지구 청소</button>
-    </div>
-
-    <!-- 활동 4 컨트롤 (없음) -->
-    <div id="ctrl-4" class="controls" style="display:none;">
-        <!-- 설명 화면이므로 컨트롤 버튼 없음 -->
-    </div>
+    <div class="toast-msg" id="toast"></div>
 
     <script>
-        let currentTab = 1;
-        const msgBox = document.getElementById('message-box');
-        const labContainer = document.getElementById('lab-container');
-        const ground = document.getElementById('ground');
-        
-        const movingObj = document.getElementById('moving-object'); 
-        
-        const earthContainer = document.getElementById('earth-container');
-        const earthDiv = document.getElementById('earth');
-        
-        const summaryContainer = document.getElementById('summary-container');
+        // 상태 변수
+        let currentGravity = 1.0; // 지구 표면 기준 (배수)
+        let currentMass = 0; // kg 단위
+        let currentItemName = '';
+        let currentItemIcon = '';
 
-        function changeTab(tabNum) {
-            currentTab = tabNum;
-            resetLab(); 
+        // 초기화: 눈금 그리기
+        const ruler = document.getElementById('ruler');
+        for(let i=0; i<=25; i++) { // 눈금 더 촘촘하게
+            let tick = document.createElement('div');
+            tick.className = 'tick';
+            tick.style.top = (i * 10) + 'px'; 
+            if (i % 5 === 0) tick.style.width = '10px'; 
+            ruler.appendChild(tick);
+        }
 
-            // 탭 스타일 업데이트
-            document.querySelectorAll('.tab-btn').forEach((btn, idx) => {
-                if (idx + 1 === tabNum) btn.classList.add('active');
-                else btn.classList.remove('active');
-            });
-
-            // 컨트롤 패널 전환
-            document.getElementById('ctrl-1').style.display = tabNum === 1 ? 'flex' : 'none';
-            document.getElementById('ctrl-2').style.display = tabNum === 2 ? 'flex' : 'none';
-            document.getElementById('ctrl-3').style.display = tabNum === 3 ? 'flex' : 'none';
-            document.getElementById('ctrl-4').style.display = tabNum === 4 ? 'flex' : 'none';
-
-            // 화면 구성 전환
-            earthContainer.style.display = 'none';
-            movingObj.style.display = 'none';
-            summaryContainer.style.display = 'none';
+        // 장소 변경 함수
+        function changeLocation(gravityFactor, locationName, bgColor, btnElement) {
+            currentGravity = gravityFactor;
             
-            if (tabNum === 4) {
-                // 활동 4: 핵심 정리
-                summaryContainer.style.display = 'flex';
-                ground.style.display = 'none';
-                labContainer.style.backgroundColor = '#fff3e0';
-                labContainer.style.border = '4px solid #ff7043';
-                msgBox.textContent = "실험에서 배운 내용을 정리해 볼까요?";
-            } else if (tabNum === 3) {
-                // 활동 3: 지구본
-                earthContainer.style.display = 'flex';
-                ground.style.display = 'none';
-                labContainer.style.backgroundColor = '#263238';
-                labContainer.style.border = '4px solid #039be5';
-                msgBox.textContent = "지구 표면에 찰싹! 모두 중심을 향해 서 있어요.";
-            } else {
-                // 활동 1, 2: 지상
-                movingObj.style.display = 'block';
-                ground.style.display = 'block';
-                labContainer.style.backgroundColor = 'white';
-                labContainer.style.border = '4px solid #039be5';
-                
-                if (tabNum === 1) msgBox.textContent = "무거운 공과 가벼운 풍선, 어떻게 떨어질까요?";
-                else msgBox.textContent = "종이를 앞으로 던지면 어떻게 움직일까요?";
+            // UI 업데이트
+            document.getElementById('loc-display').innerText = locationName;
+            document.body.style.backgroundColor = bgColor;
+            if(locationName.includes('달')) document.body.style.color = 'white';
+            else document.body.style.color = 'black';
+
+            // 버튼 스타일 활성화
+            document.querySelectorAll('.loc-btn').forEach(btn => btn.classList.remove('active'));
+            btnElement.classList.add('active');
+
+            // 토스트 메시지
+            showToast(`${locationName}으로 이동했습니다.`);
+
+            // 현재 걸린 물체가 있다면 무게 재계산
+            if(currentMass > 0) {
+                updateScale();
             }
         }
 
-        // 활동 1: 공 vs 풍선
-        function runActivity1(type) {
-            resetAnimations();
-            if (type === 'ball') {
-                movingObj.textContent = '⚽';
-                msgBox.textContent = "공은 아래로 떨어져요.";
-                movingObj.style.animation = "dropHeavy 0.8s cubic-bezier(0.6, 0.04, 0.98, 0.335) forwards";
-            } else if (type === 'balloon') {
-                movingObj.textContent = '🎈';
-                msgBox.textContent = "풍선은 천천히 내려오지만 아래로 떨어져요.";
-                movingObj.style.animation = "dropLight 3.5s ease-in-out forwards";
-            }
+        // 물체 선택 함수
+        function selectItem(mass, icon, name) {
+            currentMass = mass;
+            currentItemIcon = icon;
+            currentItemName = name;
+            updateScale();
         }
 
-        // 활동 2: 종이 포물선
-        function runActivity2() {
-            resetAnimations();
-            movingObj.textContent = '📄';
-            msgBox.textContent = "종이비행기는 앞으로 날아가지만, 아래로 떨어져요!";
-            movingObj.style.animation = "parabolicThrow 2.5s ease-out forwards";
+        // 저울 제거 함수
+        function removeItem() {
+            currentMass = 0;
+            currentItemIcon = '';
+            currentItemName = '';
+            resetScale();
         }
 
-        // 활동 3: 지구본 붙이기
-        function addSticker(type) {
-            const sticker = document.createElement('div');
-            sticker.className = 'sticker';
-            sticker.textContent = type === 'person' ? '🧍' : '🏢';
+        // 저울 업데이트 (핵심 로직)
+        function updateScale() {
+            // 지구 중력 가속도 약 9.8 m/s² -> 편의상 10N/kg으로 가정하여 계산
+            // 무게(N) = 질량(kg) * 중력가속도(10) * 장소팩터
+            const baseGravity = 10; 
+            const weight = currentMass * baseGravity * currentGravity;
 
-            const angleDeg = Math.random() * 360;
-            const angleRad = angleDeg * (Math.PI / 180);
-            
-            const earthRadius = 140; 
-            const stickerBoxHalfHeight = 25; 
-            const fineTune = 4; 
-            const distance = earthRadius + stickerBoxHalfHeight - fineTune; 
+            // 시각적 표현 계산
+            const pixelsPerNewton = 25; // 1N당 픽셀 수
+            const baseTop = 55;
+            const extension = weight * pixelsPerNewton;
 
-            const cx = 140;
-            const cy = 140;
-            const x = cx + distance * Math.cos(angleRad);
-            const y = cy + distance * Math.sin(angleRad);
+            // DOM 요소
+            const pointer = document.getElementById('pointer');
+            const spring = document.getElementById('spring');
+            const activeItem = document.getElementById('active-item');
 
-            sticker.style.left = `${x - 25}px`; 
-            sticker.style.top = `${y - 25}px`;
-            sticker.style.transform = `rotate(${angleDeg + 90}deg)`;
-            
-            // 대륙 튀어나옴 방지 위해 overflow visible 유지
-            earthDiv.style.overflow = 'visible'; 
-            earthDiv.style.clipPath = 'none';
-            
-            earthDiv.appendChild(sticker);
-            
-            if(type === 'person') msgBox.textContent = "사람이 지구 표면에 딱! 붙어있어요.";
-            else msgBox.textContent = "건물도 지구 중심을 향해 단단히 서 있어요.";
+            // 애니메이션 적용
+            pointer.style.top = (baseTop + extension) + 'px';
+            spring.style.height = (30 + (extension * 0.6)) + 'px'; // 용수철 길이 변화
+            activeItem.innerHTML = currentItemIcon;
+            activeItem.style.transform = `translateY(${extension * 0.4}px)`;
+
+            // 텍스트 패널 업데이트
+            document.getElementById('mass-display').innerText = (currentMass * 1000) + 'g'; // 질량은 불변
+            document.getElementById('weight-display').innerText = weight.toFixed(2) + ' N'; // 무게는 변화
         }
 
-        function resetLab() {
-            resetAnimations();
-            movingObj.textContent = '❓';
-            movingObj.style.left = '50%';
-            movingObj.style.transform = 'translateX(-50%)';
-
-            const stickers = document.querySelectorAll('.sticker');
-            stickers.forEach(el => el.remove());
-            
-            // 기본 메시지로 초기화되지 않도록 탭 전환 로직에 맡김
+        function resetScale() {
+            document.getElementById('pointer').style.top = '55px';
+            document.getElementById('spring').style.height = '30px';
+            document.getElementById('active-item').innerHTML = '';
+            document.getElementById('active-item').style.transform = 'translateY(0)';
+            document.getElementById('mass-display').innerText = '-';
+            document.getElementById('weight-display').innerText = '0 N';
         }
 
-        function resetAnimations() {
-            movingObj.style.animation = 'none';
-            void movingObj.offsetWidth; 
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            toast.innerText = message;
+            toast.style.opacity = 1;
+            setTimeout(() => { toast.style.opacity = 0; }, 2000);
         }
-
-        changeTab(1);
     </script>
 </body>
 </html>
